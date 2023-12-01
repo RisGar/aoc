@@ -6,11 +6,11 @@ defmodule Day01 do
         |> String.split("\n", trim: true)
         |> Enum.map(fn e ->
           first =
-            e |> String.split("", trim: true) |> Enum.find(fn e -> Integer.parse(e) != :error end)
+            e |> String.graphemes() |> Enum.find(fn e -> Integer.parse(e) != :error end)
 
           second =
             e
-            |> String.split("", trim: true)
+            |> String.graphemes()
             |> Enum.reverse()
             |> Enum.find(fn e -> Integer.parse(e) != :error end)
 
@@ -18,10 +18,6 @@ defmodule Day01 do
         end)
         |> Enum.sum()
         |> IO.inspect()
-
-        # |> Enum.filter(&(&1 |> is_integer()))
-
-        # |> Enum.sum()
     end
   end
 
@@ -75,8 +71,7 @@ defmodule Day01 do
           |> elem(0)
         end)
         |> Enum.sum()
-        # |> Enum.count()
-        |> IO.inspect(limit: :infinity)
+        |> IO.inspect()
     end
   end
 end
