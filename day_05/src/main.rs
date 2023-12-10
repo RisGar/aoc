@@ -34,7 +34,7 @@ fn get_input() -> Vec<String> {
   fs::read_to_string("input/input.txt")
     .unwrap()
     .split("\n\n")
-    .map(|str| str.to_string())
+    .map(String::from)
     .collect()
 }
 

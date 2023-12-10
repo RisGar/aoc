@@ -23,7 +23,7 @@ fn lcm(a: usize, b: usize) -> usize {
 // END From Rosetta Code
 
 fn lcm_vec(a: Vec<usize>) -> usize {
-  a.into_iter().fold(1, lcm)
+  a.into_iter().reduce(lcm).unwrap()
 }
 
 fn main() {
@@ -57,7 +57,7 @@ fn parse_input() -> (String, Map) {
         .unwrap()
         .replace(['(', ')'], "")
         .split(", ")
-        .map(|s| s.to_string())
+        .map(String::from)
         .collect();
 
       (
