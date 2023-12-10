@@ -1,11 +1,13 @@
 use std::fs;
 
 fn main() {
-  part1();
-  part2();
+  println!("{}", part1());
+  println!("{}", part2());
 }
 
-fn parse_input() -> Vec<Vec<i32>> {
+type Seqs = Vec<Vec<i32>>;
+
+fn parse_input() -> Seqs {
   fs::read_to_string("input/input.txt")
     .unwrap()
     .lines()
@@ -17,8 +19,8 @@ fn parse_input() -> Vec<Vec<i32>> {
     .collect()
 }
 
-fn find_differences(line: Vec<i32>) -> Vec<Vec<i32>> {
-  let mut sequences: Vec<Vec<i32>> = vec![line];
+fn find_differences(line: Vec<i32>) -> Seqs {
+  let mut sequences: Seqs = vec![line];
   loop {
     let mut differences: Vec<i32> = vec![];
 
@@ -60,15 +62,11 @@ fn predict_last_value(line: Vec<i32>) -> i32 {
   first_number
 }
 
-fn part1() {
+fn part1() -> i32 {
   let lines = parse_input();
-  let value: i32 = lines.into_iter().map(predict_next_value).sum();
-
-  println!("{:#?}", value);
+  lines.into_iter().map(predict_next_value).sum()
 }
-fn part2() {
+fn part2() -> i32 {
   let lines = parse_input();
-  let value: i32 = lines.into_iter().map(predict_last_value).sum();
-
-  println!("{:#?}", value);
+  lines.into_iter().map(predict_last_value).sum()
 }
