@@ -56,7 +56,7 @@ fn expand_rows(galaxies: &[Complex<i64>], expansion_factor: i64) -> Vec<Complex<
   galaxies.into_iter().map(|x| x.expanded).collect()
 }
 
-fn get_distance(galaxy_1: &Complex<i64>, galaxy_2: &Complex<i64>) -> i64 {
+fn manhattan_distance(galaxy_1: &Complex<i64>, galaxy_2: &Complex<i64>) -> i64 {
   (galaxy_1.im - galaxy_2.im).abs() + (galaxy_1.re - galaxy_2.re).abs()
 }
 
@@ -72,7 +72,7 @@ fn calculate_distances(galaxies: Vec<Complex<i64>>) -> i64 {
       {
         distance_map.insert(
           (galaxy_1.0, galaxy_2.0),
-          get_distance(galaxy_1.1, galaxy_2.1),
+          manhattan_distance(galaxy_1.1, galaxy_2.1),
         );
       }
     }
