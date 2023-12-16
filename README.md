@@ -1,3 +1,10 @@
-# Advent of Code 2023#
+# Advent of Code 2023
 
-- Languages: Elixir, Rust
+## Languages
+
+### Rust
+
+#### Used Libraries:
+
+- `num` for complex numbers
+- `itertools`
