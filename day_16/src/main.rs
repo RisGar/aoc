@@ -74,25 +74,23 @@ fn energise_wall(
         energised_positions.push((position, direction));
 
         match position_type {
-          MirrorType::Vertical => match direction {
-            UP | DOWN => {
+          MirrorType::Vertical => match direction.re {
+            0 => {
               energise_wall(map, energised_positions, position + direction, direction);
             }
-            LEFT | RIGHT => {
+            _ => {
               energise_wall(map, energised_positions, position + UP, UP);
               energise_wall(map, energised_positions, position + DOWN, DOWN);
             }
-            _ => unreachable!("Invalid direction"),
           },
-          MirrorType::Horizontal => match direction {
-            LEFT | RIGHT => {
+          MirrorType::Horizontal => match direction.im {
+            0 => {
               energise_wall(map, energised_positions, position + direction, direction);
             }
-            UP | DOWN => {
+            _ => {
               energise_wall(map, energised_positions, position + LEFT, LEFT);
               energise_wall(map, energised_positions, position + RIGHT, RIGHT);
             }
-            _ => unreachable!("Invalid direction"),
           },
           MirrorType::DiagonalRight | MirrorType::DiagonalLeft => {
             let direction = direction * get_diagonal_multiplier(*position_type, direction);
@@ -126,6 +124,7 @@ fn get_possible_directions(n: &Position, dims: usize) -> Vec<Position> {
 
 fn main() {
   let (mut input, dims) = parse_input();
+
   let mut energised = vec![];
   energise_wall(&mut input, &mut energised, Complex::new(0, 0), RIGHT);
   let count = energised.iter().map(|x| x.0).unique().count();
