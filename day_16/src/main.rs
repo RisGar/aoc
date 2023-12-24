@@ -1,10 +1,6 @@
 use itertools::Itertools;
 use num::Complex;
-use std::{
-  collections::{BTreeMap, HashMap},
-  fs::read_to_string,
-  sync::PoisonError,
-};
+use std::{collections::HashMap, fs::read_to_string};
 
 #[derive(Debug, Clone, Copy)]
 enum MirrorType {
@@ -31,22 +27,6 @@ impl MirrorType {
 type Position = Complex<i32>;
 type MirrorMap = HashMap<Position, MirrorType>;
 
-fn debug_map(map: &Vec<(Position, Position)>, dims: usize) {
-  let mut vec = vec![vec!['.'; dims]; dims];
-
-  for position in map {
-    vec[position.0.im as usize][position.0.re as usize] = '#';
-  }
-
-  println!(
-    "{:#?}",
-    vec
-      .iter()
-      .map(|x| x.iter().collect::<String>())
-      .collect::<Vec<String>>()
-  );
-}
-
 fn parse_input() -> (MirrorMap, usize) {
   let binding = read_to_string("input/input.txt").unwrap();
   let input = binding.lines();
@@ -71,67 +51,56 @@ const DOWN: Position = Complex::new(0, 1);
 const LEFT: Position = Complex::new(-1, 0);
 const RIGHT: Position = Complex::new(1, 0);
 
+fn get_diagonal_multiplier(position: MirrorType, direction: Position) -> Complex<i32> {
+  match (position, direction) {
+    (MirrorType::DiagonalRight, UP)
+    | (MirrorType::DiagonalRight, DOWN)
+    | (MirrorType::DiagonalLeft, LEFT)
+    | (MirrorType::DiagonalLeft, RIGHT) => DOWN,
+    (MirrorType::DiagonalRight, LEFT)
+    | (MirrorType::DiagonalRight, RIGHT)
+    | (MirrorType::DiagonalLeft, UP)
+    | (MirrorType::DiagonalLeft, DOWN) => UP,
+    _ => unreachable!("Invalid direction or position"),
+  }
+}
+
 fn energise_wall(
   map: &mut MirrorMap,
   energised_positions: &mut Vec<(Position, Position)>,
   position: Position,
   direction: Position,
 ) {
-  // println!("{} {}", position, direction);
-  // debug_map(energised_positions, (10, 10));
-
   if !energised_positions.contains(&(position, direction)) {
     {
       if let Some(position_type) = map.get(&position) {
         energised_positions.push((position, direction));
 
         match position_type {
-          MirrorType::Vertical => {
-            if direction == UP || direction == DOWN {
+          MirrorType::Vertical => match direction {
+            UP | DOWN => {
               energise_wall(map, energised_positions, position + direction, direction);
-            } else {
+            }
+            LEFT | RIGHT => {
               energise_wall(map, energised_positions, position + UP, UP);
-              energise_wall(map, energised_positions, position + DOWN, DOWN);
-            }
-          }
-          MirrorType::Horizontal => {
-            if direction == LEFT || direction == RIGHT {
-              energise_wall(map, energised_positions, position + direction, direction);
-            } else {
-              energise_wall(map, energised_positions, position + LEFT, LEFT);
-              energise_wall(map, energised_positions, position + RIGHT, RIGHT);
-            }
-          }
-          MirrorType::DiagonalRight => match direction {
-            UP => {
-              energise_wall(map, energised_positions, position + RIGHT, RIGHT);
-            }
-            DOWN => {
-              energise_wall(map, energised_positions, position + LEFT, LEFT);
-            }
-            LEFT => {
-              energise_wall(map, energised_positions, position + DOWN, DOWN);
-            }
-            RIGHT => {
-              energise_wall(map, energised_positions, position + UP, UP);
-            }
-            _ => unreachable!("Invalid direction"),
-          },
-          MirrorType::DiagonalLeft => match direction {
-            UP => {
-              energise_wall(map, energised_positions, position + LEFT, LEFT);
-            }
-            DOWN => {
-              energise_wall(map, energised_positions, position + RIGHT, RIGHT);
-            }
-            LEFT => {
-              energise_wall(map, energised_positions, position + UP, UP);
-            }
-            RIGHT => {
               energise_wall(map, energised_positions, position + DOWN, DOWN);
             }
             _ => unreachable!("Invalid direction"),
           },
+          MirrorType::Horizontal => match direction {
+            LEFT | RIGHT => {
+              energise_wall(map, energised_positions, position + direction, direction);
+            }
+            UP | DOWN => {
+              energise_wall(map, energised_positions, position + LEFT, LEFT);
+              energise_wall(map, energised_positions, position + RIGHT, RIGHT);
+            }
+            _ => unreachable!("Invalid direction"),
+          },
+          MirrorType::DiagonalRight | MirrorType::DiagonalLeft => {
+            let direction = direction * get_diagonal_multiplier(*position_type, direction);
+            energise_wall(map, energised_positions, position + direction, direction);
+          }
           MirrorType::Empty => {
             energise_wall(map, energised_positions, position + direction, direction);
           }
@@ -146,8 +115,9 @@ fn main() {
 
   let mut energised = vec![];
   energise_wall(&mut input, &mut energised, Complex::new(0, 0), RIGHT);
+
   let count = energised.iter().map(|x| x.0).unique().count();
-  println!("{}", count);
+  println!("part 1: {}", count);
 
   let starting_positions = input
     .iter()
@@ -176,12 +146,14 @@ fn main() {
 
     for direction in directions {
       let mut input = input.clone();
+
       let mut energised = vec![];
       energise_wall(&mut input, &mut energised, *starting_position, direction);
+
       let count = energised.iter().map(|x| x.0).unique().count();
       counts.push(count);
     }
   }
 
-  println!("{}", counts.iter().max().unwrap());
+  println!("part 2: {}", counts.iter().max().unwrap());
 }
