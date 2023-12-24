@@ -30,9 +30,7 @@ type MirrorMap = HashMap<Position, MirrorType>;
 fn parse_input() -> (MirrorMap, usize) {
   let binding = read_to_string("input/input.txt").unwrap();
   let input = binding.lines();
-
-  let rows = input.clone().count();
-
+  let dims = input.clone().count();
   let map = input
     .enumerate()
     .flat_map(|(y, line)| {
@@ -42,8 +40,7 @@ fn parse_input() -> (MirrorMap, usize) {
         .map(move |(x, char)| (Complex::new(x as i32, y as i32), MirrorType::parse(char)))
     })
     .collect();
-
-  (map, rows)
+  (map, dims)
 }
 
 const UP: Position = Complex::new(0, -1);
@@ -110,50 +107,39 @@ fn energise_wall(
   }
 }
 
+fn get_possible_directions(n: &Position, dims: usize) -> Vec<Position> {
+  let mut directions = vec![];
+  if n.re == 0 {
+    directions.push(RIGHT);
+  }
+  if n.re == (dims - 1) as i32 {
+    directions.push(LEFT);
+  }
+  if n.im == 0 {
+    directions.push(DOWN);
+  }
+  if n.im == (dims - 1) as i32 {
+    directions.push(UP);
+  }
+  directions
+}
+
 fn main() {
   let (mut input, dims) = parse_input();
-
   let mut energised = vec![];
   energise_wall(&mut input, &mut energised, Complex::new(0, 0), RIGHT);
-
   let count = energised.iter().map(|x| x.0).unique().count();
   println!("part 1: {}", count);
 
-  let starting_positions = input
-    .iter()
-    .map(|x| x.0)
-    .filter(|x| x.re == 0 || x.im == 0 || x.re == (dims - 1) as i32 || x.im == (dims - 1) as i32)
-    .collect::<Vec<_>>();
-
   let mut counts = vec![];
-
-  for starting_position in starting_positions {
-    let mut directions = vec![];
-
-    if starting_position.re == 0 {
-      directions.push(RIGHT);
-    }
-    if starting_position.re == (dims - 1) as i32 {
-      directions.push(LEFT);
-    }
-
-    if starting_position.im == 0 {
-      directions.push(DOWN);
-    }
-    if starting_position.im == (dims - 1) as i32 {
-      directions.push(UP);
-    }
-
-    for direction in directions {
+  for position in input.iter().map(|x| x.0) {
+    for direction in get_possible_directions(position, dims) {
       let mut input = input.clone();
-
       let mut energised = vec![];
-      energise_wall(&mut input, &mut energised, *starting_position, direction);
-
+      energise_wall(&mut input, &mut energised, *position, direction);
       let count = energised.iter().map(|x| x.0).unique().count();
       counts.push(count);
     }
   }
-
   println!("part 2: {}", counts.iter().max().unwrap());
 }
