@@ -22,7 +22,7 @@ defmodule Day01 do
   end
 
   def part2 do
-    case(File.read("input/day01.txt")) do
+    case(File.read("../input/day01.txt")) do
       {:ok, body} ->
         body
         |> String.split("\n", trim: true)
