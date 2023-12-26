@@ -93,7 +93,7 @@ fn part2() {
 }
 
 fn get_input() -> (Vec<Character>, Vec<Character>) {
-  fs::read_to_string("input/input.txt")
+  fs::read_to_string("../input/input.txt")
     .unwrap()
     .lines()
     .enumerate()
