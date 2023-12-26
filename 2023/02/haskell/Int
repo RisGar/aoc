@@ -1,0 +1,11 @@
+Unsafe.Coerce unsafeCoerce :: a -> b
+Unsafe.Coerce unsafeCoerceUnlifted :: forall (a :: UnliftedType) (b :: UnliftedType) . a -> b
+Unsafe.Coerce unsafeCoerceAddr :: forall (a :: TYPE 'AddrRep) (b :: TYPE 'AddrRep) . a -> b
+Unsafe.Coerce unsafeCoerce# :: a -> b
+GHC.Exts unsafeCoerce# :: forall (r1 :: RuntimeRep) (r2 :: RuntimeRep) (a :: TYPE r1) (b :: TYPE r2) . a -> b
+BasePrelude unsafeCoerce# :: forall (q :: RuntimeRep) (r :: RuntimeRep) (a :: TYPE q) (b :: TYPE r) . a -> b
+BasePrelude unsafeCoerceUnlifted :: forall (a :: UnliftedType) (b :: UnliftedType) . a -> b
+BasePrelude unsafeCoerceAddr :: forall (a :: TYPE 'AddrRep) (b :: TYPE 'AddrRep) . a -> b
+BasePrelude unsafeCoerce :: a -> b
+Basement.Compat.Primitive unsafeCoerce# :: forall (q :: RuntimeRep) (r :: RuntimeRep) (a :: TYPE q) (b :: TYPE r) . a -> b
+-- plus more results not shown, pass --count=20 to see more

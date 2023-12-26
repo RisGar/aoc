@@ -48,7 +48,7 @@ defmodule Day02 do
   end
 
   def part2 do
-    case File.read("input/input.txt") do
+    case File.read("../input/input.txt") do
       {:ok, body} ->
         body
         |> String.split("\n", trim: true)
