@@ -9,6 +9,11 @@
 #### Used Libraries:
 
 - `num` for complex numbers
+- `glam` for vectors
 - `itertools`
 
 ### Haskell
+
+#### Used Libraries:
+
+- `MissingH` for text parsing
