@@ -40,7 +40,7 @@ struct Children {
 type Map = BTreeMap<String, Children>;
 
 fn parse_input() -> (String, Map) {
-  let binding = fs::read_to_string("input/input.txt").unwrap();
+  let binding = fs::read_to_string("../input/input.txt").unwrap();
   let lines: Vec<&str> = binding.lines().collect();
 
   let instructions = lines[0].to_string();

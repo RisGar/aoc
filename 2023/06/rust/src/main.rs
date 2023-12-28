@@ -6,7 +6,7 @@ fn main() {
 }
 
 fn get_input() -> Vec<String> {
-  fs::read_to_string("input/input.txt")
+  fs::read_to_string("../input/input.txt")
     .unwrap()
     .lines()
     .map(|x| x.to_string())

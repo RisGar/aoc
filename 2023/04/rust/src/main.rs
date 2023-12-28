@@ -12,7 +12,7 @@ struct Card {
 }
 
 fn part1() {
-  let output: u32 = fs::read_to_string("input/input.txt")
+  let output: u32 = fs::read_to_string("../input/input.txt")
     .unwrap()
     .lines()
     .map(|line| {
@@ -53,7 +53,7 @@ struct Card2 {
 }
 
 fn part2() {
-  let mut vec: Vec<Card2> = fs::read_to_string("input/input.txt")
+  let mut vec: Vec<Card2> = fs::read_to_string("../input/input.txt")
     .unwrap()
     .lines()
     .map(|line| {

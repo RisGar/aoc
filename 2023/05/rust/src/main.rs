@@ -31,7 +31,7 @@ struct Map {
 }
 
 fn get_input() -> Vec<String> {
-  fs::read_to_string("input/input.txt")
+  fs::read_to_string("../input/input.txt")
     .unwrap()
     .split("\n\n")
     .map(String::from)

@@ -98,7 +98,7 @@ enum HandType {
 }
 
 fn parse_input() -> Vec<Hand> {
-  fs::read_to_string("input/input.txt")
+  fs::read_to_string("../input/input.txt")
     .unwrap()
     .lines()
     .map(|line| {
