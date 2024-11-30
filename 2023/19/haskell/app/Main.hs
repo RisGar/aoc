@@ -1,8 +1,8 @@
 module Main where
 
 import Control.Applicative (liftA3)
+import Data.Function ((&))
 import Data.Map qualified as M
-import Debug.Trace (traceShow)
 import Text.Parsec ((<|>))
 import Text.Parsec qualified as P
 import Prelude hiding (compare)
@@ -89,12 +89,12 @@ parseParts = P.sepEndBy parsePart (P.char '\n')
 
 parseFile :: Parser (Workflows, [Part])
 parseFile = do
-  workflows <- parseWorkflows <* P.char '\n'
-  let workflows' = M.fromList $ map ((,) =<< name) workflows
-  parts <- parseParts <* P.eof
-  return (workflows', parts)
+  ws <- parseWorkflows <* P.char '\n'
+  let ws' = M.fromList $ map ((,) =<< name) ws
+  ps <- parseParts <* P.eof
+  return (ws', ps)
 
--- Logic
+-- Part 1
 
 category :: Category -> Part -> Int
 category X p = _x p
@@ -103,12 +103,12 @@ category A p = _a p
 category S p = _s p
 
 compare :: Condition -> Part -> Bool
-compare (Condition cat Gt val) part = category cat part > val
-compare (Condition cat Lt val) part = category cat part < val
+compare (Condition cat Gt val) p = category cat p > val
+compare (Condition cat Lt val) p = category cat p < val
 
 followPart :: Workflows -> Workflow -> Part -> Int
 followPart ws w p = do
-  followRule (rules w)
+  followRule $ rules w
   where
     followRule :: [Rule] -> Int
     followRule (r : rs) = if compare (cond r) p then followAction (action r) else followRule rs
@@ -124,8 +124,16 @@ followPart ws w p = do
 part1 :: (Workflows, [Part]) -> Int
 part1 (ws, ps) = sum $ map (followPart ws (ws M.! "in")) ps
 
+-- Part 2
+
+part2 :: Workflows -> Int
+part2 ws = 1
+
+-- Main
+
 main :: IO ()
 main = do
   input <- readFile "../input/input.txt"
   let input' = parse parseFile input
   print $ part1 input'
+  print $ part2 $ fst input'
