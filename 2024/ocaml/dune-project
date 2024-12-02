@@ -5,20 +5,20 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github RisGar/aoc))
 
-(authors "Author Name <author@example.com>")
+(authors "Rishab Garg <contact@rishab-garg.me>")
 
-(maintainers "Maintainer Name <maintainer@example.com>")
+(maintainers "Rishab Garg <contact@rishab-garg.me>")
 
-(license LICENSE)
+(license EUPL-1.2)
 
-(documentation https://url/to/documentation)
+; (documentation https://url/to/documentation)
 
 (package
  (name aoc2024)
- (synopsis "A short synopsis")
- (description "A longer description")
+ (synopsis "Advent of Code 2024 in OCaml")
+ (description "Advent of Code 2024 in OCaml")
  (depends ocaml)
  (tags
   ("add topics" "to describe" your project)))

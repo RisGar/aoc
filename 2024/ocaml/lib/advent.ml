@@ -22,5 +22,5 @@ let read_file_day ~d:day ~i:input =
     In_channel.input_all
 ;;
 
-let print_part1 ~s:str = print_endline ("Part 1: " ^ str)
-let print_part2 ~s:str = print_endline ("Part 2: " ^ str)
+let print_part1 ~s:str = print_endline @@ "Part 1: " ^ str
+let print_part2 ~s:str = print_endline @@ "Part 2: " ^ str
