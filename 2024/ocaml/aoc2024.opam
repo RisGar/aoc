@@ -11,6 +11,9 @@ bug-reports: "https://github.com/RisGar/aoc/issues"
 depends: [
   "dune" {>= "3.17"}
   "ocaml"
+  "base"
+  "re"
+  "str"
   "odoc" {with-doc}
 ]
 build: [
