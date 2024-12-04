@@ -1,64 +1,31 @@
-let rec zip_with_next = function
-  | [] | [ _ ] -> []
-  | x :: (y :: _ as tl) -> (int_of_string x, int_of_string y) :: zip_with_next tl
-;;
+open Advent.Helpers
 
-let parse =
-  List.map (fun s -> String.split_on_char ' ' s) (Advent.read_lines_day ~d:2 ~i:Input)
-;;
-
-let get_diff ~s ~x ~y =
-  let is_increasing s =
-    if let x, y = List.hd s in
-       x < y
-    then true
-    else false
+let is_valid_sequence lst =
+  let rec zip_with_next = function
+    | [] | [ _ ] -> []
+    | x :: (y :: _ as tl) -> (int_of_string x, int_of_string y) :: zip_with_next tl
   in
-  match is_increasing s with
-  | true -> y - x
-  | false -> x - y
-;;
+  let direction =
+    match zip_with_next lst with
+    | (a, b) :: _ when a < b -> 1
+    | _ -> -1
+  in
+  List.for_all (fun (x, y) -> direction * (y - x) >= 1 && direction * (y - x) <= 3)
+  @@ zip_with_next lst
 
-let is_valid_diff ~d:diff = diff >= 1 && diff <= 3
+let part1 = List.length << List.filter is_valid_sequence
 
-let part1 input =
+let part2 =
   List.length
-  @@ List.filter
-       (fun s ->
-         let s' = zip_with_next s in
-         List.for_all (fun (x, y) -> is_valid_diff ~d:(get_diff ~s:s' ~x ~y)) s')
-       input
-;;
-
-let part2 input =
-  List.length
-  @@ List.filter
-       (fun s ->
-         let s' = zip_with_next s in
-         if List.for_all
-              (fun (x, y) ->
-                let diff = get_diff ~s:s' ~x ~y in
-                diff >= 1 && diff <= 3)
-              s'
-            = true
-         then true
-         else
-           Base.List.existsi
-             ~f:(fun i _ ->
-               let s'' = zip_with_next @@ List.filteri (fun i' _ -> i <> i') @@ s in
-               let res =
-                 List.for_all
-                   (fun (x, y) ->
-                     let diff = get_diff ~s:s'' ~x ~y in
-                     diff >= 1 && diff <= 3)
-                   s''
-               in
-               res)
-             s)
-       input
-;;
+  << List.filter (fun lst ->
+    is_valid_sequence lst
+    || Base.List.existsi lst ~f:(fun i _ ->
+      let lst' = List.filteri (fun i' _ -> i' <> i) lst in
+      is_valid_sequence lst'))
 
 let _ =
+  let parse =
+    List.map (fun s -> String.split_on_char ' ' s) (Advent.read_lines_day ~d:2 ~i:Input)
+  in
   Advent.print_part1 ~s:(string_of_int @@ part1 parse);
   Advent.print_part2 ~s:(string_of_int @@ part2 parse)
-;;

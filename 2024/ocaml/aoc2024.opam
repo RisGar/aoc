@@ -13,7 +13,6 @@ depends: [
   "ocaml"
   "base"
   "re"
-  "str"
   "odoc" {with-doc}
 ]
 build: [

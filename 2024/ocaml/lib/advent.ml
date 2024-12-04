@@ -1,3 +1,5 @@
+module Helpers = Helpers
+
 type input =
   | Example
   | Input

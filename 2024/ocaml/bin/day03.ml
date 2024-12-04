@@ -1,42 +1,33 @@
-let parse = Advent.read_file_day ~d:03 ~i:Input
+open Advent.Helpers
 
-let part1 input =
-  let regex =
-    Re.compile
-      Re.(
-        seq
-          [ str "mul("
-          ; group (repn digit 1 (Some 3))
-          ; str ","
-          ; group (repn digit 1 (Some 3))
-          ; str ")"
-          ])
-  in
+let part1 =
   List.fold_left
     (fun acc reg_match ->
-      acc
-      + ((int_of_string @@ Re.Group.get reg_match 1)
-         * (int_of_string @@ Re.Group.get reg_match 2)))
+       acc
+       + ((int_of_string @@ Re.Group.get reg_match 1)
+          * (int_of_string @@ Re.Group.get reg_match 2)))
     0
-  @@ Re.all regex input
-;;
+  << Re.all
+     @@ Re.compile
+          Re.(
+            seq
+              [ str "mul("
+              ; group (repn digit 1 @@ Some 3)
+              ; str ","
+              ; group (repn digit 1 @@ Some 3)
+              ; str ")"
+              ])
 
-let part2 input =
+let part2 =
   fst
-  @@ List.fold_left
-       (fun (acc, enabled) str ->
-         match str with
-         | str when String.starts_with ~prefix:"n't()" str -> acc, false
-         | str when String.starts_with ~prefix:"()" str -> acc + part1 str, true
-         | str ->
-           (match enabled with
-            | false -> acc, enabled
-            | true -> acc + part1 str, enabled))
+  << List.fold_left
+       (fun (acc, enabled) -> function
+          | `Delim delim -> acc, Re.Group.get delim 0 = "do()"
+          | `Text str -> if enabled then acc + part1 str, enabled else acc, enabled)
        (0, true)
-  @@ Str.split (Str.regexp "do") input
-;;
+  << Re.split_full @@ Re.compile @@ Re.(alt [ str "do()"; str "don't()" ])
 
 let _ =
+  let parse = Advent.read_file_day ~d:3 ~i:Input in
   Advent.print_part1 ~s:(string_of_int @@ part1 parse);
   Advent.print_part2 ~s:(string_of_int @@ part2 parse)
-;;
