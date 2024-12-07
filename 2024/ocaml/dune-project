@@ -19,7 +19,7 @@
  (name aoc2024)
  (synopsis "Advent of Code 2024 in OCaml")
  (description "Advent of Code 2024 in OCaml")
- (depends ocaml base re)
+ (depends ocaml base re domainslib)
  (tags
   ("add topics" "to describe" your project)))
 

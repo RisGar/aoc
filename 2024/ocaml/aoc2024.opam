@@ -13,6 +13,7 @@ depends: [
   "ocaml"
   "base"
   "re"
+  "domainslib"
   "odoc" {with-doc}
 ]
 build: [
